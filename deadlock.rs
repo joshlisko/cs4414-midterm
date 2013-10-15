@@ -1,13 +1,12 @@
-use std::{io, run};
-use std::str;
-use std::path;
+//Changed semaphore to deadlock
 
-/*
 
 type Semaphore = Option<uint> ; // either None (available) or owner
 
 static mut count: uint = 0; // protected by lock
-static mut lock: Semaphore = None; 
+static mut lock: Semaphore = None;
+
+
 
 fn grab_lock(id: uint) {
     unsafe {
@@ -30,51 +29,22 @@ fn update_count(id: uint) {
         count += 1;
         println(fmt!("Count updated by %?: %?", id, count));
         release_lock();
+        if(id==0){
+        	grab_lock(id+1);
+    	}
+        else{
+        	grab_lock(id-1);
+        }
+        release_lock;
     }
 }
 
 fn main() {
+    for num in range(0u, 2) {
         do spawn {
-            for num in range(0u, 1000) {
+            for _ in range(0u, 100) {
                 update_count(num);
             }
         }
+    }
 }
-
-
-/*
-
-fn main() {
-		
-	let (port, chan) : (Port<int>, Chan<int>) = stream();
-
-	let val1 = 3;
-	let val2 = 4;
-   	
-   	do spawn {
-    	chan.send(val1);
-   	}
-
-   	do spawn{
-   		chan.send(val2);
-   	}
-
-   	let newval1 = port.recv();
-   	let newval2 = port.recv();
-   	println(fmt!("%?",newval1));
-   	println(fmt!("%?",newval2));
-   	
-
-	//do std::task::spawn_sched(std::task::SingleThreaded){
-	//	loop{
-	//		println("task 1");
-	//	}
-	//}
-
-	//do std::task::spawn_sched(std::task::SingleThreaded){
-	//	loop{
-	//		println("task 2");
-	//	}
-	//}
-}
-*/
