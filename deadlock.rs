@@ -28,14 +28,15 @@ fn update_count(id: uint) {
         grab_lock(id);
         count += 1;
         println(fmt!("Count updated by %?: %?", id, count));
-        release_lock();
+        
         if(id==0){
         	grab_lock(id+1);
     	}
         else{
         	grab_lock(id-1);
         }
-        release_lock;
+        release_lock();
+        release_lock();
     }
 }
 
